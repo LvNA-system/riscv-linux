@@ -1,0 +1,5 @@
+config LABLE_MODULE_IN_RISCV
+	tristate "LABLE_MODULE IN RISCV"
+	default y	
+	help
+	this is a lable task struct static module

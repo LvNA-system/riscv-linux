@@ -22,6 +22,10 @@ file /bin/busybox /home/czh/Documents/RISC-V/tool/busybox-1.21.1/busybox 755 0 0
 file /etc/inittab arch/riscv/inittab 755 0 0
 
 file /czh/fork /home/czh/Documents/tmp/fork 755 0 0
+file /bin/lablerun /home/czh/Documents/tmp/lable 755 0 0
+file /czh/nostop /home/czh/Documents/tmp/nostop 755 0 0
+file /czh/hello /home/czh/Documents/tmp/hello 755 0 0
+file /czh/go /home/czh/Documents/tmp/go/hello 755 0 0
 
 slink /init /bin/busybox 755 0 0
 

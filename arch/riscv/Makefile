@@ -67,4 +67,7 @@ core-y += arch/riscv/kernel/ arch/riscv/mm/
 
 libs-y += arch/riscv/lib/
 
+#add by changzihao
+core-$(CONFIG_LABLE_MODULE_IN_RISCV) += arch/riscv/lable/
+
 all: vmlinux

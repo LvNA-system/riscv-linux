@@ -282,3 +282,5 @@ source "crypto/Kconfig"
 
 source "lib/Kconfig"
 
+#add by changzihao
+source "arch/riscv/lable/Kconfig"

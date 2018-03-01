@@ -1,9 +1,34 @@
 dir /bin 755 0 0
-file /bin/busybox tmp/bin/busybox 755 0 0
 dir /etc 755 0 0
-file /etc/inittab tmp/etc/inittab 755 0 0
-
 dir /dev 755 0 0
+dir /lib 755 0 0
+dir /lib64 755 0 0
+dir /lib64/lp64d 755 0 0
+dir /proc 755 0 0
+dir /sbin 755 0 0
+dir /sys 755 0 0
+dir /tmp 755 0 0
+dir /usr 755 0 0
+dir /usr/bin 755 0 0
+dir /usr/lib 755 0 0
+dir /usr/sbin 755 0 0
+dir /czh 755 0 0
+
+file /lib64/lp64d/ld.so.1 /home/czh/Documents/RISC-V/tool/riscv/sysroot/lib64/lp64d/ld.so.1 755 0 0
+file /lib64/lp64d/libc.so.6 /home/czh/Documents/RISC-V/tool/riscv/sysroot/lib64/lp64d/libc.so.6 755 0 0
+file /lib64/lp64d/libm.so.6 /home/czh/Documents/RISC-V/tool/riscv/sysroot/lib64/lp64d/libm.so.6 755 0 0
+
+file /bin/busybox /home/czh/Documents/RISC-V/tool/busybox-1.21.1/busybox 755 0 0
+file /etc/inittab arch/riscv/inittab 755 0 0
+
+file /czh/fork /home/czh/Documents/tmp/fork 755 0 0
+file /bin/lablerun /home/czh/Documents/tmp/lable 755 0 0
+file /czh/nostop /home/czh/Documents/tmp/nostop 755 0 0
+file /czh/hello /home/czh/Documents/tmp/hello 755 0 0
+file /czh/go /home/czh/Documents/tmp/go/hello 755 0 0
+
+slink /init /bin/busybox 755 0 0
+
+
 nod /dev/console 644 0 0 c 5 1
 nod /dev/null 644 0 0 c 1 3
-slink /init /bin/busybox 755 0 0

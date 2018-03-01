@@ -1,0 +1,1 @@
+obj-$(CONFIG_LABLE_MODULE_IN_RISCV) += lable.o

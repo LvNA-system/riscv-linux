@@ -124,7 +124,7 @@ static int __init lable_init(void)
 static void __exit lable_exit(void)
 {
 	printk("Lable module uninstalled!\n");
-	remove_proc_entry("abc_proc", NULL); 
+	remove_proc_entry("dsid", NULL);
 	return;
 }
 

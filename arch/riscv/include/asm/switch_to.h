@@ -50,6 +50,7 @@ extern struct task_struct *__switch_to(struct task_struct *,
 do {							\
 	struct task_struct *__prev = (prev);		\
 	struct task_struct *__next = (next);		\
+	csr_write(0x9c0,__next->dsid);             \
 	__switch_to_aux(__prev, __next);		\
 	((last) = __switch_to(__prev, __next));		\
 } while (0)

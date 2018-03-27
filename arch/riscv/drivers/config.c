@@ -595,6 +595,7 @@ static void *config_find_devices(const char *config)
 
 	// Register devices
 	for (i = 0; i < num_devices; ++i) {
+    Log("Registering device \"%s\"", devices[i].name);
 		platform_device_register(devices + i);
 		enable_config_attribute(devices + i);
 	}
@@ -614,17 +615,14 @@ static int config_string_probe(struct platform_device *pdev)
 		return -ENOENT;
 	}
 
-	mem = devm_ioremap_resource(&pdev->dev, res);
-	if (IS_ERR(mem)) {
-		dev_err(&pdev->dev, "Cannot map resources %ld\n", PTR_ERR(mem));
-		return -ENOENT;
-	}
+  mem = (void *)res->start;
 
 	/* Fixup our missing config attribute */
 	pdev->archdata.config_start = mem;
 	pdev->archdata.config_end = mem + resource_size(res) - 1; // remove null terminator
 	enable_config_attribute(pdev);
 
+  Log("Finding devices from configure string...");
 	kdata = config_find_devices(mem);
 	dev_set_drvdata(&pdev->dev, kdata);
 

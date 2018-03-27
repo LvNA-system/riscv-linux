@@ -2,7 +2,7 @@
 CC = riscv64-unknown-linux-gnu-gcc 
 
 multi_thread = ./multi_thread
-CFlags_m = -fopenmp -D_REENTRANT -Wall -pedantic -O2 -lrt -static #-std=c99
+CFlags_m = -fopenmp -D_REENTRANT -Wall -pedantic -O2 -lrt #-static #-std=c99
 objs_m = do_one_file_m.o main_m.o sort_m.o my_seq_ops_m.o my_string.o 
 Include_m = -I./
 
@@ -24,7 +24,7 @@ my_seq_ops_m.o: my_seq_ops.c my_seq_ops.h
 
 
 single_thread = ./single_thread
-CFlags_s = -Wall -pedantic -O2 -lrt -static#-std=c99
+CFlags_s = -Wall -pedantic -O2 -lrt #-static#-std=c99
 objs_s = do_one_file_s.o main_s.o sort_s.o my_seq_ops_s.o my_single_omp_s.o my_string.o 
 Include_s = -I./ 
 

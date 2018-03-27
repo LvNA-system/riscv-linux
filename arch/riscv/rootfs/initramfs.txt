@@ -7,6 +7,7 @@ dir /sbin 755 0 0
 dir /sys 755 0 0
 dir /tmp 755 0 0
 dir /usr 755 0 0
+dir /mnt 755 0 0
 dir /usr/bin 755 0 0
 dir /usr/lib 755 0 0
 dir /usr/sbin 755 0 0
@@ -14,12 +15,17 @@ dir /root 755 0 0
 dir /root/benchmark 755 0 0
 dir /root/redis 755 0 0
 
-# for emu
-#file /init arch/riscv/rootfs/build/stream.int 755 0 0
+nod /dev/console 644 0 0 c 5 1
+nod /dev/null 644 0 0 c 1 3
 
+file /root/setup-eth.sh arch/riscv/rootfs/setup-eth.sh 755 0 0
+
+# libraries, REMEMBER TO FIX THE PATH ACCORDING TO YOUR SETTING OF $RISCV ENVIRONMENT VARIABLE
 file /lib/ld.so.1  /opt/riscv-toolchain/sysroot/lib/ld.so.1 755 0 0
 file /lib/libc.so.6 /opt/riscv-toolchain/sysroot/lib/libc.so.6 755 0 0
 file /lib/libm.so.6 /opt/riscv-toolchain/sysroot/lib/libm.so.6 755 0 0
+file /lib/libdl.so.2 /opt/riscv-toolchain/sysroot/lib/libdl.so.2 755 0 0
+file /lib/libpthread.so.0 /opt/riscv-toolchain/sysroot/lib/libpthread.so.0 755 0 0
 
 file /bin/busybox arch/riscv/rootfs/build/busybox 755 0 0
 file /etc/inittab arch/riscv/rootfs/inittab 755 0 0
@@ -33,8 +39,6 @@ file /root/redis/run-redis.sh arch/riscv/rootfs/redis-4.0.2/run-redis.sh 755 0 0
 file /root/redis/redis-server arch/riscv/rootfs/build/redis-server 755 0 0
 file /root/redis/redis-cli arch/riscv/rootfs/build/redis-cli 755 0 0
 file /root/redis/redis-benchmark arch/riscv/rootfs/build/redis-benchmark 755 0 0
-file /lib/libdl.so.2 /opt/riscv-toolchain/sysroot/lib/libdl.so.2 755 0 0
-file /lib/libpthread.so.0 /opt/riscv-toolchain/sysroot/lib/libpthread.so.0 755 0 0
 
 #sort
 file /root/benchmark/sort_single arch/riscv/rootfs/build/single_thread 755 0 0
@@ -43,6 +47,3 @@ file /root/benchmark/data.txt arch/riscv/rootfs/sort-openmp/sort_data 755 0 0
 
 #cgroup
 file /load_dsid.sh arch/riscv/rootfs/load-cgroup.sh 755 0 0
-
-nod /dev/console 644 0 0 c 5 1
-nod /dev/null 644 0 0 c 1 3

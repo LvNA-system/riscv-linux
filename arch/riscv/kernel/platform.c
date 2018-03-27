@@ -29,21 +29,28 @@ static struct platform_device *riscv_devices[] __initdata = {
 	&config_string,
 };
 
+static char config_buffer[4096];
 static int __init riscv_platform_init(void)
 {
-#if 0
-	unsigned long base, size;
+  long size;
+  long i;
 
-	/* We need to query SBI for the ROM's location */
-	base = sbi_config_string_base();
-	size = sbi_config_string_size();
+  /* We need to query SBI for the ROM's location */
+  size = sbi_config_string_size();
+  Log("Obtaining configure string, size = %ld", size);
+  BUG_ON(size >= 4095);
+  for(i = 0; i < size; i ++) {
+    config_buffer[i] = (char)sbi_config_string_base(i);
+    if (config_buffer[i] == '\0') {
+      Log("find null byte in configure string!");
+    }
+  }
+  config_buffer[i] = '\0';
+  config_string_resources[0].start = (uintptr_t)config_buffer;
+  config_string_resources[0].end   = (uintptr_t)config_buffer + size;
 
-	config_string_resources[0].start = base;
-	config_string_resources[0].end   = base + size - 1;
-
-	platform_add_devices(riscv_devices, ARRAY_SIZE(riscv_devices));
-#endif
-	return 0;
+  platform_add_devices(riscv_devices, ARRAY_SIZE(riscv_devices));
+  return 0;
 }
 
 arch_initcall(riscv_platform_init)

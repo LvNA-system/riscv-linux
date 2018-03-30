@@ -36,6 +36,7 @@ file /root/benchmark/stream.int arch/riscv/rootfs/build/stream.int 755 0 0
 # scripts
 file /root/scripts/load_dsid.sh arch/riscv/rootfs/scripts/load-cgroup.sh 755 0 0
 file /root/scripts/setup-eth.sh arch/riscv/rootfs/scripts/setup-eth.sh 755 0 0
+file /root/scripts/nfs.sh arch/riscv/rootfs/scripts/nfs.sh 755 0 0
 
 # redis
 dir /root/redis 755 0 0

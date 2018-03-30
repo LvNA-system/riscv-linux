@@ -68,6 +68,6 @@ libs-y += arch/riscv/lib/
 drivers-y += arch/riscv/drivers/
 
 #add by changzihao
-core-$(CONFIG_LABLE_MODULE_IN_RISCV) += arch/riscv/lable/
+core-$(CONFIG_CGROUP_DSID) += arch/riscv/label/
 
 all: vmlinux

@@ -110,7 +110,7 @@ static const struct file_operations dsidfile =
 	.write   = dsid_file_write,  
 };
 
-static int __init lable_init(void)
+static int __init label_init(void)
 {
 	struct proc_dir_entry *dsid = proc_create("dsid",0,NULL,&dsidfile);
 	if(!dsid)
@@ -121,16 +121,16 @@ static int __init lable_init(void)
 	return 0;
 }
 
-static void __exit lable_exit(void)
+static void __exit label_exit(void)
 {
-	printk("Lable module uninstalled!\n");
+	printk("Label module uninstalled!\n");
 	remove_proc_entry("dsid", NULL);
 	return;
 }
 
-module_init(lable_init);
-module_exit(lable_exit);
+module_init(label_init);
+module_exit(label_exit);
 
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Chang Zihao");
-MODULE_DESCRIPTION("A lable task_struct Module");
+MODULE_DESCRIPTION("A label task_struct Module");

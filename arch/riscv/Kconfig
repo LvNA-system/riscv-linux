@@ -285,4 +285,4 @@ source "crypto/Kconfig"
 source "lib/Kconfig"
 
 #add by changzihao
-source "arch/riscv/lable/Kconfig"
+source "arch/riscv/label/Kconfig"

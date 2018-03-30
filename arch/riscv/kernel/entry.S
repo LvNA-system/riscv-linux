@@ -63,6 +63,7 @@ _save_context:
 	csrr s2, sepc
 	csrr s3, sbadaddr
 	csrr s4, scause
+  mv s5, a7
 	REG_S s0, PT_SP(sp)
 	REG_S s1, PT_SSTATUS(sp)
 	REG_S s2, PT_SEPC(sp)
@@ -182,6 +183,9 @@ check_syscall_nr:
 ret_from_syscall:
 	/* Set user a0 to kernel a0 */
 	REG_S a0, PT_A0(sp)
+  mv a1, s5
+  mv a0, sp
+  jal print_stack
 	/* Trace syscalls, but only if requested by the user. */
 	REG_L t0, TASK_THREAD_INFO(tp)
 	REG_L t0, TI_FLAGS(t0)

@@ -1,5 +1,5 @@
 config CGROUP_DSID
-	tristate "LABEL_MODULE IN RISCV"
+	tristate "label support within cgroup"
 	default y	
 	help
 	this is a label task struct static module

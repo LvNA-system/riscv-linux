@@ -38,15 +38,18 @@ file /root/scripts/load_dsid.sh arch/riscv/rootfs/scripts/load-cgroup.sh 755 0 0
 file /root/scripts/setup-eth.sh arch/riscv/rootfs/scripts/setup-eth.sh 755 0 0
 file /root/scripts/nfs.sh arch/riscv/rootfs/scripts/nfs.sh 755 0 0
 
-# redis
-dir /root/redis 755 0 0
-file /root/redis/redis.conf arch/riscv/rootfs/redis-4.0.2/redis.conf 644 0 0
-file /root/redis/run-redis.sh arch/riscv/rootfs/redis-4.0.2/run-redis.sh 755 0 0
-file /root/redis/redis-server arch/riscv/rootfs/build/redis-server 755 0 0
-file /root/redis/redis-cli arch/riscv/rootfs/build/redis-cli 755 0 0
-file /root/redis/redis-benchmark arch/riscv/rootfs/build/redis-benchmark 755 0 0
+###########################
+# NOTE: if you do not have an NFS server, uncomment files below to include them into ramdisk
 
-#sort
-file /root/benchmark/sort_single arch/riscv/rootfs/build/single_thread 755 0 0
-file /root/benchmark/sort_multi arch/riscv/rootfs/build/multi_thread 755 0 0
-file /root/benchmark/data.txt arch/riscv/rootfs/sort-openmp/sort_data 755 0 0
+## redis
+#dir /root/redis 755 0 0
+#file /root/redis/redis.conf arch/riscv/rootfs/redis-4.0.2/redis.conf 644 0 0
+#file /root/redis/run-redis.sh arch/riscv/rootfs/redis-4.0.2/run-redis.sh 755 0 0
+#file /root/redis/redis-server arch/riscv/rootfs/build/redis-server 755 0 0
+#file /root/redis/redis-cli arch/riscv/rootfs/build/redis-cli 755 0 0
+#file /root/redis/redis-benchmark arch/riscv/rootfs/build/redis-benchmark 755 0 0
+#
+##sort
+#file /root/benchmark/sort_single arch/riscv/rootfs/build/single_thread 755 0 0
+#file /root/benchmark/sort_multi arch/riscv/rootfs/build/multi_thread 755 0 0
+#file /root/benchmark/data.txt arch/riscv/rootfs/sort-openmp/sort_data 755 0 0

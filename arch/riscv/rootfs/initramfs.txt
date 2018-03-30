@@ -45,3 +45,6 @@ file /root/redis/redis-benchmark arch/riscv/rootfs/build/redis-benchmark 755 0 0
 file /root/benchmark/sort_single arch/riscv/rootfs/build/single_thread 755 0 0
 file /root/benchmark/sort_multi arch/riscv/rootfs/build/multi_thread 755 0 0
 file /root/benchmark/data.txt arch/riscv/rootfs/sort-openmp/sort_data 755 0 0
+
+#cgroup
+file /load_dsid.sh arch/riscv/rootfs/load-cgroup.sh 755 0 0

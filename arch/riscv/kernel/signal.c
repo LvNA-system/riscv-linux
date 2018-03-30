@@ -9,7 +9,7 @@
 #include <asm/switch_to.h>
 #include <asm/csr.h>
 
-#define DEBUG_SIG 0
+#define DEBUG_SIG 1
 
 struct rt_sigframe {
 	struct siginfo info;
@@ -191,6 +191,7 @@ static void do_signal(struct pt_regs *regs)
 	struct ksignal ksig;
 
 	if (get_signal(&ksig)) {
+    Log("ksig.no = %d, sig = %d", ksig.info.si_signo, ksig.sig);
 		/* Actually deliver the signal */
 		handle_signal(&ksig, regs);
 		return;

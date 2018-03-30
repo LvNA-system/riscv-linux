@@ -2,6 +2,7 @@
 #include <linux/kallsyms.h>
 #include <linux/sched.h>
 #include <linux/stacktrace.h>
+#include <linux/syscalls.h>
 
 #ifdef CONFIG_FRAME_POINTER
 
@@ -118,6 +119,22 @@ unsigned long get_wchan(struct task_struct *task)
 		walk_stackframe(task, NULL, save_wchan, &pc);
 	}
 	return pc;
+}
+
+void print_stack(struct pt_regs *regs, unsigned long sysno) {
+	unsigned long sp, pc;
+  if (sysno == __NR_tgkill) {
+    sp = GET_USP(regs);
+    pc = GET_IP(regs);
+    Log("user sp = %lx, pc = %lx", sp, pc);
+    int i;
+    unsigned long *spp = (uintptr_t)sp;
+    for (i = 0; i < 25; i ++) {
+      printk("0x%016lx: 0x%016lx  0x%016lx 0x%016lx 0x%016lx\n",
+          (uintptr_t)spp, spp[0], spp[1], spp[2], spp[3]);
+      spp += 4;
+    }
+  }
 }
 
 

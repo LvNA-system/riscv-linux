@@ -10,7 +10,7 @@
 #include <linux/pid.h>
 
 static char *input;
-static char *output = "The dsid dife is empty";
+static char *output = "The dsid file is empty";
 static int parameter[4];  
 
 static int convert(char *s, int* a)
@@ -110,6 +110,9 @@ static const struct file_operations dsidfile =
 	.write   = dsid_file_write,  
 };
 
+extern void register_cp_mmio(void);
+extern void unregister_cp_mmio(void);
+
 static int __init label_init(void)
 {
 	struct proc_dir_entry *dsid = proc_create("dsid",0,NULL,&dsidfile);
@@ -117,12 +120,14 @@ static int __init label_init(void)
 	{
 		return -ENOMEM;
 	}	
+  register_cp_mmio();
 	printk("Label module installed!\n");
 	return 0;
 }
 
 static void __exit label_exit(void)
 {
+  unregister_cp_mmio();
 	printk("Label module uninstalled!\n");
 	remove_proc_entry("dsid", NULL);
 	return;

@@ -1,7 +1,43 @@
 #include <linux/cgroup.h>   
 #include <linux/slab.h>
 #include <linux/kernel.h>
-#include <asm/sbi.h>
+#include <asm/io.h>
+
+static volatile uint64_t *cpbase;
+enum {
+	//cache p
+	WAYMASK=0,
+	//cache s
+	ACCESS,
+	MISS,
+	USAGE,
+	//mem p
+	SIZES,
+	FREQ,
+	INC,
+	//mem s
+	MEM_READ,
+	MEM_WRITE
+};
+// waymask,access,miss,usage,sizes,freq,incs,read,write
+// cpbase[idx * (1 << proc_dsid_width) + proc_dsid]
+
+static uint32_t cp_reg_r(uint32_t idx,uint32_t proc_id) {
+	return (uint32_t)readq( cpbase+(idx * (1<<3) + proc_id) );
+}
+
+static void cp_reg_w(uint32_t idx,uint32_t proc_id, uint32_t val) {
+	writeq( val, cpbase+(idx * (1<<3) + proc_id) );
+}
+
+void register_cp_mmio(void) {
+	cpbase=ioremap_nocache(0x900,0x700);
+}
+
+void unregister_cp_mmio(void) {
+	iounmap(cpbase);
+}
+
 
 struct dsid_cgroup 
 {
@@ -80,28 +116,6 @@ static int dsid_set_show(struct seq_file *sf, void *v)
 	return 0;
 }
 
-
-volatile uint32_t *cpbase = (uint32_t *)0x900;
-enum{
-	//cache p
-	WAYMASK=0,
-	//cache s
-	ACCESS,
-	MISS,
-	USAGE,
-	//mem p
-	SIZES,
-	FREQ,
-	INC,
-	//mem s
-	MEM_READ,
-	MEM_WRITE
-};
-// waymask,access,miss,usage,sizes,freq,incs,read,write
-// cpbase[idx * (1 << proc_dsid_width) + proc_dsid]
-// use sbi to r/w cp regs
-// sbi_cp_reg_w(flag,dsid_ptr->dsid,num);
-// sbi_cp_reg_r(flag,dsid_ptr->dsid);
 static ssize_t dsid_mem_write(struct kernfs_open_file *of, char *buf, size_t nbytes, loff_t off)
 {
 	struct cgroup_subsys_state *css = of_css(of);
@@ -138,7 +152,7 @@ static ssize_t dsid_mem_write(struct kernfs_open_file *of, char *buf, size_t nby
 		printk("please input correct table name: sizes,freq,inc,read,write\n");
 		return -EINVAL;
 	}
-	sbi_cp_reg_w(flag,dsid_ptr->dsid,num);
+	cp_reg_w(flag,dsid_ptr->dsid,num);
 
 	return nbytes;
 }
@@ -148,11 +162,11 @@ static int dsid_mem_show(struct seq_file *sf, void *v)
 	struct cgroup_subsys_state *css = seq_css(sf);
 	struct dsid_cgroup *dsid_ptr = css_dsid(css);
 	int proc_dsid=dsid_ptr->dsid;
-	uint32_t tok_size = sbi_cp_reg_r(SIZES,proc_dsid);
-	uint32_t tok_freq = sbi_cp_reg_r(FREQ,proc_dsid);
-	uint32_t tok_inc = sbi_cp_reg_r(INC,proc_dsid);
-	uint32_t mem_read = sbi_cp_reg_r(MEM_READ,proc_dsid);
-	uint32_t mem_write = sbi_cp_reg_r(MEM_WRITE,proc_dsid);
+	uint32_t tok_size = cp_reg_r(SIZES,proc_dsid);
+	uint32_t tok_freq = cp_reg_r(FREQ,proc_dsid);
+	uint32_t tok_inc = cp_reg_r(INC,proc_dsid);
+	uint32_t mem_read = cp_reg_r(MEM_READ,proc_dsid);
+	uint32_t mem_write = cp_reg_r(MEM_WRITE,proc_dsid);
 
 	seq_printf(sf,"dsid of this group:%d\n",proc_dsid);
 	seq_printf(sf,"memory p table:\ntok_size:%#x tok_freq:%#x tok_inc:%#x\n",tok_size,tok_freq,tok_inc);
@@ -193,7 +207,7 @@ static ssize_t dsid_cache_write(struct kernfs_open_file *of, char *buf, size_t n
 		printk("please input correct table name: waymask,access,miss,usage\n");
 		return -EINVAL;
 	}
-	sbi_cp_reg_w(flag,dsid_ptr->dsid,num);
+	cp_reg_w(flag,dsid_ptr->dsid,num);
 
 	return nbytes;
 }
@@ -203,10 +217,10 @@ static int dsid_cache_show(struct seq_file *sf, void *v)
 	struct cgroup_subsys_state *css = seq_css(sf);
 	struct dsid_cgroup *dsid_ptr = css_dsid(css);
 	int proc_dsid=dsid_ptr->dsid;
-	uint32_t waymask = sbi_cp_reg_r(WAYMASK,proc_dsid);
-	uint32_t access_num = sbi_cp_reg_r(ACCESS,proc_dsid);
-	uint32_t miss_num = sbi_cp_reg_r(MISS,proc_dsid);
-	uint32_t usage_num = sbi_cp_reg_r(USAGE,proc_dsid);
+	uint32_t waymask = cp_reg_r(WAYMASK,proc_dsid);
+	uint32_t access_num = cp_reg_r(ACCESS,proc_dsid);
+	uint32_t miss_num = cp_reg_r(MISS,proc_dsid);
+	uint32_t usage_num = cp_reg_r(USAGE,proc_dsid);
 
 	seq_printf(sf,"dsid of this group:%d\n",proc_dsid);
 	seq_printf(sf,"cache p table:\nwaymask:%#x\n",waymask);
@@ -231,7 +245,7 @@ static struct cftype dsid_files[] =
 		.write = dsid_cache_write,
 		.seq_show = dsid_cache_show,
 	},
-	{}
+	{}//null terminator
 	
 };
 

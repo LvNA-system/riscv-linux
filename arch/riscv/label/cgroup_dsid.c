@@ -1,6 +1,42 @@
 #include <linux/cgroup.h>   
 #include <linux/slab.h>
 #include <linux/kernel.h>
+#include <asm/io.h>
+
+static volatile uint64_t *cpbase;
+enum {
+	//cache p
+	WAYMASK=0,
+	//cache s
+	ACCESS,
+	MISS,
+	USAGE,
+	//mem p
+	SIZES,
+	FREQ,
+	INC,
+	//mem s
+	MEM_READ,
+	MEM_WRITE
+};
+// waymask,access,miss,usage,sizes,freq,incs,read,write
+// cpbase[idx * (1 << proc_dsid_width) + proc_dsid]
+
+static uint32_t cp_reg_r(uint32_t idx,uint32_t proc_id) {
+	return (uint32_t)readq( cpbase+(idx * (1<<3) + proc_id) );
+}
+
+static void cp_reg_w(uint32_t idx,uint32_t proc_id, uint32_t val) {
+	writeq( val, cpbase+(idx * (1<<3) + proc_id) );
+}
+
+void register_cp_mmio(void) {
+	cpbase=ioremap_nocache(0x900,0x700);
+}
+
+void unregister_cp_mmio(void) {
+	iounmap(cpbase);
+}
 
 
 struct dsid_cgroup 
@@ -79,29 +115,6 @@ static int dsid_set_show(struct seq_file *sf, void *v)
 	seq_printf(sf,"dsid of this group is %d\n",dsid->dsid);
 	return 0;
 }
-
-
-extern uint64_t *cpbase;
-enum{
-	//cache p
-	WAYMASK=0,
-	//cache s
-	ACCESS,
-	MISS,
-	USAGE,
-	//mem p
-	SIZES,
-	FREQ,
-	INC,
-	//mem s
-	MEM_READ,
-	MEM_WRITE
-};
-// waymask,access,miss,usage,sizes,freq,incs,read,write
-// cpbase[idx * (1 << proc_dsid_width) + proc_dsid]
-
-extern uint32_t cp_reg_r(uint32_t idx,uint32_t proc_id);
-extern void cp_reg_w(uint32_t idx,uint32_t proc_id, uint32_t val);
 
 static ssize_t dsid_mem_write(struct kernfs_open_file *of, char *buf, size_t nbytes, loff_t off)
 {

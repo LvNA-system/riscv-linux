@@ -10,7 +10,7 @@
 #include <linux/pid.h>
 
 static char *input;
-static char *output = "The dsid dife is empty";
+static char *output = "The dsid file is empty";
 static int parameter[4];  
 
 static int convert(char *s, int* a)

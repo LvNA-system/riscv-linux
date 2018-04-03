@@ -46,3 +46,10 @@ config ETH_XILINX_RV
 	depends on RISCV
 	help
   Say 'Y' here if you want kernel to support the Xilinx AXI dummy eth driver.
+
+config DEBUG_MMIO
+	bool "Platform device for RISCV debug"
+	depends on RISCV
+	default y
+	help
+	   This enables support for reading and writing the RISCV debug moudule.

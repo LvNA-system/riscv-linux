@@ -4,6 +4,7 @@
 #include <linux/platform_device.h>
 
 volatile uint64_t *cpbase;
+extern int debug_install;
 /*enum{
 	//cache p
 	WAYMASK=0,
@@ -15,6 +16,7 @@ volatile uint64_t *cpbase;
 	SIZES,
 	FREQ,
 	INC,
+	DSID,
 	//mem s
 	MEM_READ,
 	MEM_WRITE
@@ -34,11 +36,13 @@ void cp_reg_w(uint32_t idx,uint32_t proc_id, uint32_t val)
 static int riscv_debug_probe(struct platform_device *pdev)
 {
 	cpbase=ioremap_nocache(0x900,0x700);
+	debug_install = 1;
 	return 0;
 }
 
 static int riscv_debug_remove(struct platform_device *pdev)
 {
+	debug_install=0;
 	iounmap(cpbase);
 	return 0;
 }

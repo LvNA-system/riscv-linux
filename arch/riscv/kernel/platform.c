@@ -54,3 +54,6 @@ static int __init riscv_platform_init(void)
 }
 
 arch_initcall(riscv_platform_init)
+
+
+int debug_install=0;

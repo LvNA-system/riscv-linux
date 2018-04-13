@@ -1393,7 +1393,11 @@ struct tlbflush_unmap_batch {
 
 struct task_struct {
 	//add by changzihao
-	int dsid;
+	unsigned int dsid;
+	//add by legend
+	unsigned int sizes;
+	unsigned int freq;
+	unsigned int inc;
 
 	volatile long state;	/* -1 unrunnable, 0 runnable, >0 stopped */
 	void *stack;

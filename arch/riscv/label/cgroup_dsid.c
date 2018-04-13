@@ -2,11 +2,15 @@
 #include <linux/slab.h>
 #include <linux/kernel.h>
 
+#include <linux/smp.h>
 
 struct dsid_cgroup 
 {
 	struct cgroup_subsys_state css;
-	int dsid;
+	unsigned int dsid;
+	unsigned int sizes;
+	unsigned int freq;
+	unsigned int inc;
 };
 
 static struct dsid_cgroup *css_dsid(struct cgroup_subsys_state *css)
@@ -35,8 +39,12 @@ static int dsid_can_attach(struct cgroup_taskset *tset)
 
 	cgroup_taskset_for_each(task, dst_css, tset)
 	{
-		struct dsid_cgroup *dsid = css_dsid(dst_css);
-		task->dsid = dsid->dsid;
+		struct dsid_cgroup *dsid_ptr = css_dsid(dst_css);
+		task->dsid = dsid_ptr->dsid;
+
+		task->sizes = dsid_ptr-> sizes;
+		task->freq = dsid_ptr-> freq;
+		task->inc = dsid_ptr-> inc;
 	}
 	return 0;
 }
@@ -93,6 +101,7 @@ enum{
 	SIZES,
 	FREQ,
 	INC,
+	DSID,
 	//mem s
 	MEM_READ,
 	MEM_WRITE
@@ -107,6 +116,8 @@ static ssize_t dsid_mem_write(struct kernfs_open_file *of, char *buf, size_t nby
 {
 	struct cgroup_subsys_state *css = of_css(of);
 	struct dsid_cgroup *dsid_ptr = css_dsid(css);
+	struct css_task_iter it;
+	struct task_struct *task;
 	int err;
 	uint32_t num;
 	char *tab = buf;
@@ -124,22 +135,37 @@ static ssize_t dsid_mem_write(struct kernfs_open_file *of, char *buf, size_t nby
 	int flag=-1;
 
 	if(strcmp(tab,"sizes")==0)
-		flag=4;
+		flag=SIZES;
 	else if(strcmp(tab,"freq")==0)
-		flag=5;
+		flag=FREQ;
 	else if(strcmp(tab,"inc")==0)
-		flag=6;
+		flag=INC;
+	else if(strcmp(tab,"dsid")==0)
+		flag=DSID;
 	else if(strcmp(tab,"read")==0)
-		flag=7;
+		flag=MEM_READ;
 	else if(strcmp(tab,"write")==0)
-		flag=8;
+		flag=MEM_WRITE;
 	
 	if(flag<0)
 	{
 		printk("please input correct table name: sizes,freq,inc,read,write\n");
 		return -EINVAL;
 	}
-	cp_reg_w(flag,dsid_ptr->dsid,num);
+	else if(flag>=MEM_READ)
+		cp_reg_w(flag,dsid_ptr->dsid,num);
+	else{
+		(&(dsid_ptr->sizes))[flag-SIZES]= num;
+
+		css_task_iter_start(css,&it);
+		while((task = css_task_iter_next(&it)))
+		{
+			(&(task->sizes))[flag-SIZES] = (&(dsid_ptr->sizes))[flag-SIZES];
+			//task->freq = dsid_ptr->freq;
+			//task->inc = dsid_ptr->inc;
+		}
+		css_task_iter_end(&it);
+	}
 
 	return nbytes;
 }
@@ -149,9 +175,12 @@ static int dsid_mem_show(struct seq_file *sf, void *v)
 	struct cgroup_subsys_state *css = seq_css(sf);
 	struct dsid_cgroup *dsid_ptr = css_dsid(css);
 	int proc_dsid=dsid_ptr->dsid;
-	uint32_t tok_size = cp_reg_r(SIZES,proc_dsid);
-	uint32_t tok_freq = cp_reg_r(FREQ,proc_dsid);
-	uint32_t tok_inc = cp_reg_r(INC,proc_dsid);
+	//uint32_t tok_size = cp_reg_r(SIZES,proc_dsid);
+	//uint32_t tok_freq = cp_reg_r(FREQ,proc_dsid);
+	//uint32_t tok_inc = cp_reg_r(INC,proc_dsid);
+	uint32_t tok_size = dsid_ptr->sizes;
+	uint32_t tok_freq = dsid_ptr->freq;
+	uint32_t tok_inc = dsid_ptr->inc;
 	uint32_t mem_read = cp_reg_r(MEM_READ,proc_dsid);
 	uint32_t mem_write = cp_reg_r(MEM_WRITE,proc_dsid);
 
@@ -181,13 +210,13 @@ static ssize_t dsid_cache_write(struct kernfs_open_file *of, char *buf, size_t n
 	int flag=-1;
 
 	if(strcmp(tab,"waymask")==0)
-		flag=0;
+		flag=WAYMASK;
 	else if(strcmp(tab,"access")==0)
-		flag=1;
+		flag=ACCESS;
 	else if(strcmp(tab,"miss")==0)
-		flag=2;
+		flag=MISS;
 	else if(strcmp(tab,"usage")==0)
-		flag=3;
+		flag=USAGE;
 	
 	if(flag<0)
 	{

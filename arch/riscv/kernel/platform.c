@@ -12,6 +12,11 @@
 #include <linux/platform_device.h>
 #include <asm/sbi.h>
 
+/* HACK: Remove all references to Log in code so we can remove this define */
+#ifndef Log
+# define Log
+#endif
+
 static struct resource config_string_resources[] = {
 	[0] = {
 		.flags = IORESOURCE_MEM,

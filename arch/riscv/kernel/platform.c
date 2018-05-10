@@ -14,7 +14,7 @@
 
 /* HACK: Remove all references to Log in code so we can remove this define */
 #ifndef Log
-# define Log
+# define Log(...)
 #endif
 
 static struct resource config_string_resources[] = {

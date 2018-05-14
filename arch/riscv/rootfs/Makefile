@@ -10,8 +10,11 @@ all: rootfs
 #--------------------------------------------------------------------
 
 RISCV_PREFIX=riscv64-unknown-elf-
+RISCV_LIBC_PREFIX=riscv64-unknown-linux-gnu-
 CC = $(RISCV_PREFIX)gcc
+CC_LIBC = $(RISCV_LIBC_PREFIX)gcc
 LD = $(RISCV_PREFIX)ld
+STRIP = $(RISCV_PREFIX)strip
 RISCV_DUMP = $(RISCV_PREFIX)objdump
 RISCV_COPY = $(RISCV_PREFIX)objcopy
 RISCV_READELF = $(RISCV_PREFIX)readelf
@@ -72,6 +75,7 @@ $(STREAM_REPO_PATH)/stream.c: | $(STREAM_REPO_PATH)
 $(STREAM_INT_ELF): $(STREAM_REPO_PATH)/stream.c
 	mkdir -p $(@D)
 	$(CC) -static -DSTREAM_ARRAY_SIZE=10000 -DNTIMES=2 -DSTREAM_TYPE=int $(STREAM_REPO_PATH)/stream.c -o $@
+	$(STRIP) -g $@
 
 stream: $(STREAM_INT_ELF)
 
@@ -93,6 +97,22 @@ $(HELLO_ELF): hello/hello.c
 hello: $(HELLO_ELF)
 
 .PHONY: hello
+
+#--------------------------------------------------------------------
+# Minimal init
+#--------------------------------------------------------------------
+
+MININIT_ELF = build/mininit
+
+$(MININIT_ELF): mininit.c
+	mkdir -p $(@D)
+	$(CC_LIBC) -DEXECUTE=\"/stream.int\" -static $< -o $@
+	$(STRIP) -g $@
+
+mininit: $(MININIT_ELF)
+
+.PHONY: mininit
+
 
 #--------------------------------------------------------------------
 # Sort variables
@@ -155,7 +175,7 @@ redis-clean:
 # Rootfs top-level rules
 #--------------------------------------------------------------------
 
-rootfs: busybox redis sort stream hello
+rootfs: busybox redis sort stream hello mininit
 
 clean: busybox-clean stream-clean redis-clean sort-clean
 	rm $(HELLO_ELF)

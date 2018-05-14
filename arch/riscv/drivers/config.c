@@ -14,6 +14,11 @@
 #include <linux/slab.h>
 #include <linux/platform_device.h>
 
+/* HACK: Remove all references to Log in code so we can remove this define */
+#ifndef Log
+# define Log(...)
+#endif
+
 static ssize_t config_read(struct file *filp, struct kobject *kobj,
                            struct bin_attribute *attr,
                            char *buf, loff_t off, size_t count)

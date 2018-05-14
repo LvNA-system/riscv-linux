@@ -12,11 +12,6 @@
 #include <linux/platform_device.h>
 #include <asm/sbi.h>
 
-/* HACK: Remove all references to Log in code so we can remove this define */
-#ifndef Log
-# define Log(...)
-#endif
-
 static struct resource config_string_resources[] = {
 	[0] = {
 		.flags = IORESOURCE_MEM,
@@ -42,12 +37,12 @@ static int __init riscv_platform_init(void)
 
   /* We need to query SBI for the ROM's location */
   size = sbi_config_string_size();
-  Log("Obtaining configure string, size = %ld", size);
+  printk("Obtaining configure string, size = %ld", size);
   BUG_ON(size >= 4095);
   for(i = 0; i < size; i ++) {
     config_buffer[i] = (char)sbi_config_string_base(i);
     if (config_buffer[i] == '\0') {
-      Log("find null byte in configure string!");
+      printk("find null byte in configure string!");
     }
   }
   config_buffer[i] = '\0';

@@ -14,11 +14,6 @@
 #include <linux/slab.h>
 #include <linux/platform_device.h>
 
-/* HACK: Remove all references to Log in code so we can remove this define */
-#ifndef Log
-# define Log(...)
-#endif
-
 static ssize_t config_read(struct file *filp, struct kobject *kobj,
                            struct bin_attribute *attr,
                            char *buf, loff_t off, size_t count)
@@ -600,7 +595,7 @@ static void *config_find_devices(const char *config)
 
 	// Register devices
 	for (i = 0; i < num_devices; ++i) {
-    Log("Registering device \"%s\"", devices[i].name);
+    printk("Registering device \"%s\"", devices[i].name);
 		platform_device_register(devices + i);
 		enable_config_attribute(devices + i);
 	}
@@ -627,7 +622,7 @@ static int config_string_probe(struct platform_device *pdev)
 	pdev->archdata.config_end = mem + resource_size(res) - 1; // remove null terminator
 	enable_config_attribute(pdev);
 
-  Log("Finding devices from configure string...");
+  printk("Finding devices from configure string...");
 	kdata = config_find_devices(mem);
 	dev_set_drvdata(&pdev->dev, kdata);
 

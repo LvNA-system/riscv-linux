@@ -386,10 +386,15 @@
  * @tx_skb:	  Transmit skb address
  */
 struct axidma_bd {
+#if defined(CONFIG_PHYS_ADDR_T_64BIT)
+	phys_addr_t next;	/* Physical address of next buffer descriptor */
+	phys_addr_t phys;
+#else
 	u32 next;	/* Physical address of next buffer descriptor */
 	u32 reserved1;
 	u32 phys;
 	u32 reserved2;
+#endif
 	u32 reserved3;
 	u32 reserved4;
 	u32 cntrl;

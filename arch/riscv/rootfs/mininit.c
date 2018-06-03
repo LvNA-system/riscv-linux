@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <signal.h>
+#include <stdint.h>
 #include <sys/reboot.h>
 #include <sys/types.h>
 #include <sys/wait.h>
@@ -39,6 +40,9 @@ int main(int argc, char **argv)
 	} else if (p > 0) {
 		/* parent */
 		waitpid(p, NULL, 0);
+    uint64_t cycle;
+    asm volatile("rdcycle %0": "=r"(cycle));
+    printf("cycle = %llx\n", cycle);
 		reboot(RB_POWER_OFF);
 		for (;;)
 			sleep(1);

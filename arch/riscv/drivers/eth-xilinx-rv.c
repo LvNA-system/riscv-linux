@@ -37,6 +37,8 @@
 
 #include "xilinx_axienet.h"
 
+#define Log(format, ...) printk("[%s,%d,%s] " format "\n", __func__, __LINE__, __FILE__, ## __VA_ARGS__)
+
 /* Descriptors defines for Tx and Rx DMA - 2^n for the best performance */
 #define TX_BD_NUM		64
 #define RX_BD_NUM		128
@@ -822,7 +824,7 @@ static irqreturn_t axienet_tx_irq(int irq, void *_ndev)
 		dev_err(&ndev->dev, "No interrupts asserted in Tx path\n");
 	if (status & XAXIDMA_IRQ_ERROR_MASK) {
 		dev_err(&ndev->dev, "DMA Tx error 0x%x\n", status);
-		dev_err(&ndev->dev, "Current BD is at: 0x%x\n",
+		dev_err(&ndev->dev, "Current BD is at: 0x%llx\n",
 			(lp->tx_bd_v[lp->tx_bd_ci]).phys);
 
 		cr = axienet_dma_in32(lp, XAXIDMA_TX_CR_OFFSET);
@@ -872,7 +874,7 @@ static irqreturn_t axienet_rx_irq(int irq, void *_ndev)
 		dev_err(&ndev->dev, "No interrupts asserted in Rx path\n");
 	if (status & XAXIDMA_IRQ_ERROR_MASK) {
 		dev_err(&ndev->dev, "DMA Rx error 0x%x\n", status);
-		dev_err(&ndev->dev, "Current BD is at: 0x%x\n",
+		dev_err(&ndev->dev, "Current BD is at: 0x%llx\n",
 			(lp->rx_bd_v[lp->rx_bd_ci]).phys);
 
 		cr = axienet_dma_in32(lp, XAXIDMA_TX_CR_OFFSET);
@@ -934,10 +936,12 @@ static int axienet_open(struct net_device *ndev)
 	ret = request_irq(lp->tx_irq, axienet_tx_irq, 0, ndev->name, ndev);
 	if (ret)
 		goto err_tx_irq;
+  Log("tx_irq = %d", lp->tx_irq);
 	/* Enable interrupts for Axi DMA Rx */
 	ret = request_irq(lp->rx_irq, axienet_rx_irq, 0, ndev->name, ndev);
 	if (ret)
 		goto err_rx_irq;
+  Log("rx_irq = %d", lp->rx_irq);
 
 	return 0;
 

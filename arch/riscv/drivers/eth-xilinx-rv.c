@@ -37,6 +37,8 @@
 
 #include "xilinx_axienet.h"
 
+#define Log(format, ...) printk("[%s,%d,%s] " format "\n", __func__, __LINE__, __FILE__, ## __VA_ARGS__)
+
 /* Descriptors defines for Tx and Rx DMA - 2^n for the best performance */
 #define TX_BD_NUM		64
 #define RX_BD_NUM		128
@@ -934,10 +936,12 @@ static int axienet_open(struct net_device *ndev)
 	ret = request_irq(lp->tx_irq, axienet_tx_irq, 0, ndev->name, ndev);
 	if (ret)
 		goto err_tx_irq;
+  Log("tx_irq = %d", lp->tx_irq);
 	/* Enable interrupts for Axi DMA Rx */
 	ret = request_irq(lp->rx_irq, axienet_rx_irq, 0, ndev->name, ndev);
 	if (ret)
 		goto err_rx_irq;
+  Log("rx_irq = %d", lp->rx_irq);
 
 	return 0;
 

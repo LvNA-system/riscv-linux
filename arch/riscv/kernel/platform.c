@@ -37,12 +37,12 @@ static int __init riscv_platform_init(void)
 
   /* We need to query SBI for the ROM's location */
   size = sbi_config_string_size();
-  printk("Obtaining configure string, size = %ld", size);
+  printk("Obtaining configure string, size = %ld\n", size);
   BUG_ON(size >= 4095);
   for(i = 0; i < size; i ++) {
     config_buffer[i] = (char)sbi_config_string_base(i);
     if (config_buffer[i] == '\0') {
-      printk("find null byte in configure string!");
+      printk("find null byte in configure string!\n");
     }
   }
   config_buffer[i] = '\0';

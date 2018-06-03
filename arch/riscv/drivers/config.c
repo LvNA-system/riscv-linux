@@ -595,7 +595,7 @@ static void *config_find_devices(const char *config)
 
 	// Register devices
 	for (i = 0; i < num_devices; ++i) {
-    printk("Registering device \"%s\"", devices[i].name);
+    printk("Registering device \"%s\"\n", devices[i].name);
 		platform_device_register(devices + i);
 		enable_config_attribute(devices + i);
 	}
@@ -622,7 +622,7 @@ static int config_string_probe(struct platform_device *pdev)
 	pdev->archdata.config_end = mem + resource_size(res) - 1; // remove null terminator
 	enable_config_attribute(pdev);
 
-  printk("Finding devices from configure string...");
+  printk("Finding devices from configure string...\n");
 	kdata = config_find_devices(mem);
 	dev_set_drvdata(&pdev->dev, kdata);
 

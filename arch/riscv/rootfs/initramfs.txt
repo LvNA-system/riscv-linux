@@ -35,10 +35,16 @@ file /root/benchmark/stream.int arch/riscv/rootfs/build/stream.int 755 0 0
 
 # scripts
 dir /root/scripts 755 0 0
-file /root/scripts/load_dsid.sh arch/riscv/rootfs/scripts/load-cgroup.sh 755 0 0
+dir /root/scripts/1 755 0 0
+dir /root/scripts/2 755 0 0
+dir /root/scripts/5 755 0 0
 file /root/scripts/setup-eth.sh arch/riscv/rootfs/scripts/setup-eth.sh 755 0 0
-file /root/scripts/copy-file.sh arch/riscv/rootfs/scripts/copy-file.sh 755 0 0
 file /root/scripts/nfs.sh arch/riscv/rootfs/scripts/nfs.sh 755 0 0
+file /root/scripts/1/load_dsid.sh arch/riscv/rootfs/scripts/1/load-cgroup.sh 755 0 0
+file /root/scripts/1/copy-file.sh arch/riscv/rootfs/scripts/1/copy-file.sh 755 0 0
+file /root/scripts/2/83-mount.sh arch/riscv/rootfs/scripts/2/83-mount.sh 755 0 0
+file /root/scripts/2/85-mount.sh arch/riscv/rootfs/scripts/2/85-mount.sh 755 0 0
+file /root/scripts/5/run.sh arch/riscv/rootfs/scripts/5/run.sh 755 0 0
 
 ###########################
 # NOTE: if you do not have an NFS server, uncomment files below to include them into ramdisk

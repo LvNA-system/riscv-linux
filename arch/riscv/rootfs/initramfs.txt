@@ -33,6 +33,21 @@ slink /init /bin/busybox 755 0 0
 dir /root/benchmark 755 0 0
 file /root/benchmark/stream.int arch/riscv/rootfs/build/stream.int 755 0 0
 
+#file /root/dwarfs-pack.tar.gz arch/riscv/rootfs/dwarfs-pack.tar.gz 644 0 0
+#dir /root/dwarfs 755 0 0
+#dir /root/dwarfs/md5 755 0 0
+#dir /root/dwarfs/sort 755 0 0
+#dir /root/dwarfs/wordcount 755 0 0
+#file /root/dwarfs/md5/single_thread arch/riscv/rootfs/dwarfs-pack/md5/single_thread 755 0 0
+#file /root/dwarfs/md5/ha.txt arch/riscv/rootfs/dwarfs-pack/md5/ha.txt 755 0 0
+#file /root/dwarfs/md5/run.sh arch/riscv/rootfs/dwarfs-pack/md5/run.sh 755 0 0
+#file /root/dwarfs/sort/single_thread arch/riscv/rootfs/dwarfs-pack/sort/single_thread 755 0 0
+#file /root/dwarfs/sort/ha.txt arch/riscv/rootfs/dwarfs-pack/sort/ha.txt 755 0 0
+#file /root/dwarfs/sort/run.sh arch/riscv/rootfs/dwarfs-pack/sort/run.sh 755 0 0
+#file /root/dwarfs/wordcount/single_thread arch/riscv/rootfs/dwarfs-pack/wordcount/single_thread 755 0 0
+#file /root/dwarfs/wordcount/ha.txt arch/riscv/rootfs/dwarfs-pack/wordcount/ha.txt 755 0 0
+#file /root/dwarfs/wordcount/run.sh arch/riscv/rootfs/dwarfs-pack/wordcount/run.sh 755 0 0
+
 # scripts
 dir /root/scripts 755 0 0
 dir /root/scripts/1 755 0 0

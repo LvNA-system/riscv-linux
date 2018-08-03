@@ -33,12 +33,33 @@ slink /init /bin/busybox 755 0 0
 dir /root/benchmark 755 0 0
 file /root/benchmark/stream.int arch/riscv/rootfs/build/stream.int 755 0 0
 
+#file /root/dwarfs-pack.tar.gz arch/riscv/rootfs/dwarfs-pack.tar.gz 644 0 0
+#dir /root/dwarfs 755 0 0
+#dir /root/dwarfs/md5 755 0 0
+#dir /root/dwarfs/sort 755 0 0
+#dir /root/dwarfs/wordcount 755 0 0
+#file /root/dwarfs/md5/single_thread arch/riscv/rootfs/dwarfs-pack/md5/single_thread 755 0 0
+#file /root/dwarfs/md5/ha.txt arch/riscv/rootfs/dwarfs-pack/md5/ha.txt 755 0 0
+#file /root/dwarfs/md5/run.sh arch/riscv/rootfs/dwarfs-pack/md5/run.sh 755 0 0
+#file /root/dwarfs/sort/single_thread arch/riscv/rootfs/dwarfs-pack/sort/single_thread 755 0 0
+#file /root/dwarfs/sort/ha.txt arch/riscv/rootfs/dwarfs-pack/sort/ha.txt 755 0 0
+#file /root/dwarfs/sort/run.sh arch/riscv/rootfs/dwarfs-pack/sort/run.sh 755 0 0
+#file /root/dwarfs/wordcount/single_thread arch/riscv/rootfs/dwarfs-pack/wordcount/single_thread 755 0 0
+#file /root/dwarfs/wordcount/ha.txt arch/riscv/rootfs/dwarfs-pack/wordcount/ha.txt 755 0 0
+#file /root/dwarfs/wordcount/run.sh arch/riscv/rootfs/dwarfs-pack/wordcount/run.sh 755 0 0
+
 # scripts
 dir /root/scripts 755 0 0
-file /root/scripts/load_dsid.sh arch/riscv/rootfs/scripts/load-cgroup.sh 755 0 0
+dir /root/scripts/1 755 0 0
+dir /root/scripts/2 755 0 0
+dir /root/scripts/5 755 0 0
 file /root/scripts/setup-eth.sh arch/riscv/rootfs/scripts/setup-eth.sh 755 0 0
-file /root/scripts/copy-file.sh arch/riscv/rootfs/scripts/copy-file.sh 755 0 0
 file /root/scripts/nfs.sh arch/riscv/rootfs/scripts/nfs.sh 755 0 0
+file /root/scripts/1/load_dsid.sh arch/riscv/rootfs/scripts/1/load-cgroup.sh 755 0 0
+file /root/scripts/1/copy-file.sh arch/riscv/rootfs/scripts/1/copy-file.sh 755 0 0
+file /root/scripts/2/83-mount.sh arch/riscv/rootfs/scripts/2/83-mount.sh 755 0 0
+file /root/scripts/2/85-mount.sh arch/riscv/rootfs/scripts/2/85-mount.sh 755 0 0
+file /root/scripts/5/run.sh arch/riscv/rootfs/scripts/5/run.sh 755 0 0
 
 ###########################
 # NOTE: if you do not have an NFS server, uncomment files below to include them into ramdisk

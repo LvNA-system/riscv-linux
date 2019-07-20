@@ -46,6 +46,7 @@ static inline void __switch_to_aux(struct task_struct *prev,
 
 extern struct task_struct *__switch_to(struct task_struct *,
                                        struct task_struct *);
+/*
 enum{
 	//cache p
 	WAYMASK=0,
@@ -62,23 +63,16 @@ enum{
 	MEM_READ,
 	MEM_WRITE
 };
+*/
 // waymask,access,miss,usage,sizes,freq,incs,read,write
 // cpbase[idx * (1 << proc_dsid_width) + proc_dsid]
 
-extern uint32_t cp_reg_r(uint32_t idx,uint32_t proc_id);
-extern void cp_reg_w(uint32_t idx,uint32_t proc_id, uint32_t val);
 extern int debug_install;
 #define switch_to(prev, next, last)			\
 do {							\
 	struct task_struct *__prev = (prev);		\
 	struct task_struct *__next = (next);		\
 	csr_write(0x9c0,__next->dsid);             \
-	if(debug_install){                    \
-		cp_reg_w(SIZES,smp_processor_id(),__next->sizes);    \
-		cp_reg_w(INC,smp_processor_id(),__next->inc);     \
-		cp_reg_w(FREQ,smp_processor_id(),__next->freq);     \
-		cp_reg_w(DSID,smp_processor_id(),__next->dsid);     \
-	}                                       \
 	__switch_to_aux(__prev, __next);		\
 	((last) = __switch_to(__prev, __next));		\
 } while (0)

@@ -3,7 +3,7 @@
 #include <linux/slab.h>
 #include <linux/platform_device.h>
 
-volatile uint64_t *cpbase;
+volatile uint32_t *cpbase;
 extern int debug_install;
 /*enum{
 	//cache p
@@ -24,13 +24,14 @@ extern int debug_install;
 // waymask,access,miss,usage,sizes,freq,incs,read,write
 // cpbase[idx * (1 << proc_dsid_width) + proc_dsid]
 */
-uint32_t cp_reg_r(uint32_t idx,uint32_t proc_id)
+uint32_t cp_reg_r(uint32_t dm_reg)
 {
-	return (uint32_t)readq( cpbase+(idx * (1<<3) + proc_id) );
+    return (uint32_t)readq(cpbase + idx);
 }
-void cp_reg_w(uint32_t idx,uint32_t proc_id, uint32_t val)
+
+void cp_reg_w(uint32_t dm_reg, uint32_t val)
 {
-	writeq( val, cpbase+(idx * (1<<3) + proc_id) );
+	writeq(val, cpbase + dm_reg);
 }
 
 static int riscv_debug_probe(struct platform_device *pdev)
